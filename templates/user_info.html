@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>비밀번호 변경</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        form {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            width: 300px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="joinForm" action="/user_info/chk" method="POST">
+        <h2>비밀번호 변경</h2>
+        <label for="user_id">현재 비밀번호:</label>
+        <br>
+        <input type="password" name="pass" id="user_id" onkeypress="enter(event)">
+        <br>
+        <label for="user_pass">변경할 비밀번호:</label>
+        <br>
+        <input type="password" name="pass_n" id="user_pass" onkeypress="enter(event)">
+        <br>
+        <label for="user_pass_chk">비밀번호 확인:</label>
+        <br>
+        <input type="password" name="pass_chk" id="user_pass_chk" onkeypress="enter(event)">
+        <br>
+        <button type="submit">비밀번호 변경</button>
+    </form>
+
+    <script>
+        function enter(e) {
+            var form = document.getElementById("joinForm");
+            const user_id = document.getElementById("user_id").value;
+            const user_password_chk = document.getElementById("user_pass_chk").value;
+            const user_password = document.getElementById("user_pass").value;
+            const code = e.code;
+
+            if (code == 'Enter') {
+                if (user_id == "") {
+                    word.innerHTML = "현재 비밀번호를 입력해주세요";
+                    return false;
+                }
+                else if (user_password == "") {
+                    word.innerHTML = "변경할 비밀번호를 입력해주세요";
+                    return false;
+                }
+                else if (user_password != user_password_chk) {
+                    word.innerHTML = "비밀번호가 일치하지 않습니다";
+                    return false;
+                }
+                return true; // 폼 제출 허용
+            }
+        }
+    </script>
+</body>
+
+</html>

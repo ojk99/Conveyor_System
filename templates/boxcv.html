@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Video Streaming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #video-container {
+            margin-bottom: 20px;
+        }
+
+        #controls {
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="video-container">
+        <h1>Live Video Streaming</h1>
+        <img src="{{url_for('video_feed')}}" alt="Live Video Feed">
+    </div>
+    <div id="controls">
+        <button type="button" onclick="startStream()">Start</button>
+        <button type="button" onclick="stopStream()">Stop</button>
+    </div>
+    <div id="con">
+
+    </div>
+
+    <script>
+
+        function startStream() {
+            fetch("/boxcv/start")
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data)
+                    let con = document.querySelector("#con")
+                    if (data == "OK") {
+                        con.innerHTML = "<h3>컨베이어 벨트 시작</h3>";
+                    }
+                    else {
+                        con.innerHTML = "<h3>에러</h3>";
+                    }
+                })
+        }
+
+        function stopStream() {
+            fetch("/boxcv/stop")
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data)
+                    let con = document.querySelector("#con")
+                    if (data == "OK") {
+                        con.innerHTML = "<h3>컨베이어 벨트 중지</h3>";
+                    }
+                    else {
+                        con.innerHTML = "<h3>에러</h3>";
+                    }
+                })
+        }
+    </script>
+</body>
+
+</html>

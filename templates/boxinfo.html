@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>유저 메뉴</title>
+    <!-- 부트스트랩 CDN 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 불량인 경우 빨간색 텍스트, 정상인 경우 파란색 텍스트 */
+        .defective td {
+            color: red;
+            font-size: 16px;
+            /* 원하는 크기로 조절하세요 */
+        }
+
+        .normal td {
+            color: blue;
+            font-size: 16px;
+            /* 원하는 크기로 조절하세요 */
+        }
+
+        .img-size {
+            max-width: 50%;
+            /* 이미지의 최대 너비를 100%로 설정하여 부모 요소에 맞게 조정 */
+            height: auto;
+            /* 이미지의 높이를 자동으로 조정하여 가로 세로 비율 유지 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid mt-5"> <!-- 변경된 부분: container-fluid로 변경 -->
+        <button type="button" onclick="menu()" class="btn btn-outline-primary mb-3">뒤로</button>
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>불량여부</th>
+                    <th>고유번호</th>
+                    <th>물품정보</th>
+                    <th>주문자</th>
+                    <th>관리자</th>
+                    <th>구멍뚫림</th>
+                    <th>글자</th>
+                    <th>구겨짐</th>
+                    <th>사진</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="body">
+                {% for item in box %}
+                <tr class="{% if item[0] == '불량' %}defective{% else %}normal{% endif %}">
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                    <td>{{ item[7] }}</td>
+                    <td>{{ item[8] }}</td>
+                    <td>{{ item[9] }}</td>
+                    <td>
+                        {% if item[10] is not none %}
+                        <a href="{{ item[10] }}"><img src="{{ item[10].replace('http:', 'https:') }}" alt="Image"
+                                class="img-fluid img-size"></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function menu() {
+            window.location.href = "/menu";
+        }
+    </script>
+</body>
+
+</html>

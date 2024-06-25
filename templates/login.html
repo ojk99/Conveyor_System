@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>로그인</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        form {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            width: 300px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"],
+        button[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        button[type="submit"]:hover,
+        button[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="loginForm" action="/login" method="POST">
+        <h2>로그인</h2>
+        <label for="user_id">사용자명:</label>
+        <br>
+        <input type="text" name="username" id="user_id">
+        <br>
+        <label for="user_pass">비밀번호:</label>
+        <br>
+        <input type="password" name="pass" id="user_pass">
+        <br>
+        <button type="submit">로그인</button>
+        <button type="button" onclick="join()">회원가입</button>
+        <div id="result">{{result}}</div>
+    </form>
+
+    <script>
+        function join() {
+            window.location.href = "/join";
+        }
+    </script>
+</body>
+
+</html>

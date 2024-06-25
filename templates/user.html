@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>유저 메뉴</title>
+    <!-- 부트스트랩 CDN 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="row mb-3">
+            <div class="col-12">
+                <button type="button" onclick="menu()" class="btn btn-outline-primary">뒤로</button>
+            </div>
+        </div>
+        <table class="table table-striped" id="table">
+            <thead>
+                <tr>
+                    <th>아이디</th>
+                    <th>비밀번호</th>
+                    <th>관리자권한</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in user %}
+                <tr id="row_{{ item[0] }}">
+                    {% set parsed_data = item[0].strip('()').split(',') %}
+                    {% set user_type = "" %}
+                    {% if parsed_data[3] == 'f' %}
+                    {% set user_type = "일반사용자" %}
+                    {% elif parsed_data[3] == 't' %}
+                    {% set user_type = "관리자" %}
+                    {% endif %}
+                    <td>{{ parsed_data[1] }}</td>
+                    <td>{{ parsed_data[2] }}</td>
+                    <td>{{ user_type }}</td>
+                    <td><button type="button"
+                            onclick="editUser('{{ parsed_data[1] }}', '{{ parsed_data[2] }}', '{{ parsed_data[3] }}')"
+                            class="btn btn-primary">수정</button></td>
+                    <td><button type="button" onclick="delbutton('{{ parsed_data[1] }}')"
+                            class="btn btn-danger">삭제</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 스크립트는 아래에 위치시켜 주세요 -->
+    <script>
+        function editUser(userid, password, admin) {
+            console.log("editUser 함수 호출됨");
+            var editContainer = document.getElementById("editContainer");
+            if (!editContainer) {
+                editContainer = document.createElement("div");
+                editContainer.id = "editContainer";
+                document.body.appendChild(editContainer);
+            }
+            // 수정할 정보를 입력하는 폼 요소 생성
+            var form = document.createElement("form");
+            form.setAttribute("id", "editForm"); // 폼에 ID 추가
+            form.setAttribute("method", "POST");
+            form.setAttribute("action", "/edit/user"); // Flask 라우트 주소로 변경
+
+            // 유저 정보를 입력하는 input 요소들 생성
+            var userIdInput = document.createElement("input");
+            userIdInput.setAttribute("type", "hidden");
+            userIdInput.setAttribute("name", "userid");
+            userIdInput.setAttribute("value", userid);
+            form.appendChild(userIdInput);
+
+            var userIdLabel = document.createElement("label");
+            userIdLabel.textContent = "아이디: " + userid;
+            form.appendChild(userIdLabel);
+
+            // 비밀번호 입력란과 레이블 추가
+            var passwordLabel = document.createElement("label");
+            passwordLabel.textContent = "비밀번호: ";
+            form.appendChild(passwordLabel);
+            var passwordInput = document.createElement("input");
+            passwordInput.setAttribute("type", "text");
+            passwordInput.setAttribute("name", "password");
+            passwordInput.setAttribute("value", password);
+            form.appendChild(passwordInput);
+
+            // 관리자 입력란과 레이블 추가
+            var adminLabel = document.createElement("label");
+            adminLabel.textContent = "관리자권한: ";
+            form.appendChild(adminLabel);
+            var adminSelect = document.createElement("select");
+            adminSelect.setAttribute("name", "admin");
+            form.appendChild(adminSelect);
+
+            var trueOption = document.createElement("option");
+            trueOption.value = "true";
+            trueOption.text = "True";
+            adminSelect.appendChild(trueOption);
+
+            var falseOption = document.createElement("option");
+            falseOption.value = "false";
+            falseOption.text = "False";
+            adminSelect.appendChild(falseOption);
+
+            // 수정, 취소 버튼 추가
+            var submitButton = document.createElement("input");
+            submitButton.setAttribute("type", "submit");
+            submitButton.setAttribute("value", "확인");
+            form.appendChild(submitButton);
+
+            var cancelButton = document.createElement("input");
+            cancelButton.setAttribute("type", "button");
+            cancelButton.setAttribute("value", "취소");
+            cancelButton.addEventListener("click", function () {
+                editContainer.innerHTML = ""; // 수정 창 비우기
+            });
+            form.appendChild(cancelButton);
+
+            // 수정 창을 보여줄 위치 지정 (페이지 상단에 위치하도록 설정)
+            editContainer.innerHTML = ""; // 수정 창이 이미 열려 있다면 내용 비우기
+            editContainer.appendChild(form);
+        }
+
+        function delbutton(userid) {
+            var xhr = new XMLHttpRequest();
+            var url = "/user/delete"; // 삭제할 사용자 정보를 전송할 Flask 경로
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            var data = JSON.stringify({ "userid": userid });
+            xhr.send(data);
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    console.log("데이터 전송 성공!");
+                    var response = JSON.parse(xhr.responseText);
+                    alert(response.message); // 서버에서 받은 응답 메시지를 알림창으로 표시
+
+                    // 삭제된 행을 테이블에서 제거
+                    var row = document.getElementById("row_" + userid);
+                    row.parentNode.removeChild(row);
+
+                    // 페이지 새로고침
+                    window.opener.location.href = "/user";
+                } else {
+                    console.error("데이터 전송 실패!");
+                }
+            };
+        }
+
+        function menu() {
+            window.location.href = "/menu";
+        }
+    </script>
+</body>
+
+</html>

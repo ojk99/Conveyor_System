@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>메뉴</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        form {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            width: 300px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+
+        h3 {
+            color: #333;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            width: 170px;
+            /* 버튼의 너비를 100px로 설정 */
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <h3>{{use}}님 환영합니다.</h3>
+        <button type="button" onclick="user()">관리자</button>
+        <button type="button" onclick="boxcv()">박스 검출</button>
+        <br>
+        <button type="button" onclick="boxinfo()">시트</button>
+        <button type="button" onclick="user_info()">비밀번호 변경</button>
+        <div id="result">{{result}}</div>
+    </form>
+
+    <script>
+        function user() {
+            window.location.href = "/user";
+        }
+
+        function boxcv() {
+            window.location.href = "/boxcv";
+        }
+
+        function boxinfo() {
+            window.location.href = "/boxinfo";
+        }
+
+        function user_info() {
+            window.location.href = "/user_info";
+        }
+    </script>
+</body>
+
+</html>
